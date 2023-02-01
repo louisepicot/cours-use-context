@@ -1,27 +1,20 @@
-import { useEffect, useState } from "react";
 import {Routes, Route} from "react-router-dom"
-import Navbar from "./composants/Navbar";
-import SignInModal from "./composants/SignInModal";
-import SignUpModal from "./composants/SignUpModal";
-import Home from "./pages/Home";
-
+import Home from "./pages/Home"
+import Navbar from './components/Navbar'
+import SignUpModal from "./components/SignUpModal";
+import SignInModal from "./components/SignInModal"
 
 
 function App() {
-
-
   return (
-    <div  className="App">
-
-    
-      <Navbar   />
-      <SignUpModal  />
-      <SignInModal  />
+    <>
+      <SignUpModal />
+      <SignInModal />
+      <Navbar />
       <Routes>
-        <Route path='/' element={<Home/>}/>
+        <Route path="/" element={<Home />} />
       </Routes>
-     
-    </div>
+    </>
   );
 }
 
