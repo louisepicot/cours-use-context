@@ -1,8 +1,24 @@
 import React, {useContext} from 'react'
 import {ModalContext} from "../context/modalContext"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
+import { signOut } from 'firebase/auth'
+import { auth } from '../firebase-config'
 
 export default function Navbar() {
+
+
+
+  const navigate = useNavigate()
+
+  const logOut = async () => {
+    try {
+      await signOut(auth)
+      navigate("/")
+    } catch {
+      alert("For some reasons we can't deconnect, please check your internet connexion and retry.")
+    }
+  }
+
 
   const {toggleModals} = useContext(ModalContext)
 
@@ -24,6 +40,7 @@ export default function Navbar() {
           Sign In
         </button>
         <button 
+        onClick={() => logOut()}
         className="btn btn-danger ms-2">
           Log Out
         </button>

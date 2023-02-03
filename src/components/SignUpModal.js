@@ -1,9 +1,17 @@
 import React, { useContext, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ModalContext } from "../context/modalContext";
+import { userContext } from "../context/userContext";
 
-export default function SignUpModal() {
+export default function SignUpModal(props) {
   
   const { modalState, toggleModals } = useContext(ModalContext);
+  const {signup} = useContext(userContext)
+
+
+  const navigate = useNavigate()
+
+
 
   const [validation, setValidation] = useState("");
 
@@ -13,25 +21,30 @@ export default function SignUpModal() {
       inputs.current.push(el)
     }
   }  
-  const formRef = useRef();
+
+
+  const formRef = useRef()
+  console.log( formRef)
+
 
   const handleForm = async (e) => {
     e.preventDefault()
 
-    if((inputs.current[1].value.length || inputs.current[2].value.length) < 6) {
-      setValidation("6 characters min")
-      return;
-    }
-    else if(inputs.current[1].value !== inputs.current[2].value) {
-      setValidation("Passwords do not match")
-      return;
+    if(inputs.current[1].value !== inputs.current[2].value){
+        setValidation("not same pwd")
     }
 
-  }
+    try {
+      const cred = await signup(inputs.current[0].value, inputs.current[2].value)
+       navigate("/private/private-home")
+       toggleModals('close')
+    } catch (error) {
+        console.dir(error)
 
-  const closeModal = () => {
-    setValidation("")
-    toggleModals("close")
+      if(error.code === "auth/invalid-email") {
+        setValidation(" invalid email")
+      }
+    }
   }
 
   return (
@@ -39,7 +52,7 @@ export default function SignUpModal() {
       {modalState.signUpModal && (
         <div className="position-fixed top-0 vw-100 vh-100">
           <div
-          onClick={closeModal}
+          onClick={() => {toggleModals('close')}}
           className="w-100 h-100 bg-dark bg-opacity-75">
           </div>
             <div
@@ -51,7 +64,7 @@ export default function SignUpModal() {
                   <div className="modal-header">
                     <h5 className="modal-title">Sign Up</h5>
                     <button 
-                    onClick={closeModal}
+                    onClick={() => {toggleModals('close')}}
                     className="btn-close"></button>
                   </div>
 
